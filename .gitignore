@@ -1,0 +1,7 @@
+
+#node 模块包
+node_modules/
+.idea/
+
+#node 配置文件
+*.json

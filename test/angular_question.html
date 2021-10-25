@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线学习</title>
+</head>
+
+
+<body ng-app="ngBlockchain" ng-controller="zbycontroller">
+<div class="container">
+    <div id="myvideo" class="row">
+        <div class="vbox col-md-8">
+            <video width="80%" height="" id="video" src="../public/videos/5ds.mp4" controls="controls" preload="auto"
+                   webkit-playsinline="true" x-webkit-airplay="true" playsinline x5-video-player-type="h5"
+                   x5-video-player-fullscreen="true">
+            </video>
+        </div>
+    </div>
+
+    <div class="container" style="padding-top: 10px;">
+        <hr />
+    </div>
+
+    <div>
+        <div>
+            <form id="login_value">
+                <div>
+                    <label>时 间：</label>
+                    <input type="text" id="setTime" name="setTime" value="">
+                </div>
+                <div>
+                    <label>题目：</label>
+                    <textarea id="setTitle" name="setTitle" placeholder="请输入题目"></textarea>
+                </div>
+                <div>
+                    <label>选项一：</label>
+                    <input type="radio" id="setRadio1" name="setRadio" value="1">
+                    <textarea id="setAnswer1" name="setAnswer1" placeholder="请输入选项一"></textarea>
+                </div>
+                <div>
+                    <label>选项二：</label>
+                    <input type="radio" id="setRadio2" name="setRadio" value="2">
+                    <textarea id="setAnswer2" name="setAnswer2" placeholder="请输入选项二"></textarea>
+                </div>
+                <div>
+                    <label>选项三：</label>
+                    <input type="radio" id="setRadio3" name="setRadio" value="3">
+                    <textarea id="setAnswer3" name="setAnswer3" placeholder="请输入选项三"></textarea>
+                </div>
+                <div>
+                    <label>选项四：</label>
+                    <input type="radio" id="setRadio4" name="setRadio" value="4">
+                    <textarea id="setAnswer4" name="setAnswer4" placeholder="请输入选项四"></textarea>
+                </div>
+                <div>
+                    <input type="button" value="添加问题" ng-click="addQuestion()">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="{{_question.panel}}" hidden class="container {{_question.panel}}" style="padding-top: 10px;"
+         ng-repeat="_question in questions" ng-cloak>
+        <div class="panel panel-default">
+            <div class="panel-heading">题目{{$index+1}} <span class="pull-right"></span></div>
+            <div class="panel-body">
+                <p>{{_question.question}}</p>
+            </div>
+
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="answer in _question.answers">
+
+                    <input type="radio" id=answer_{{answer.id}} name="radio_{{_question.id}}" value="{{answer.id}}">{{answer.choice}}<br>
+<!--                    <div>-->
+<!--                        <input type="checkbox" id={{answer.id}} name="{{answer.choice}}"-->
+<!--                               ng-checked="isSelected(tag.id)" ng-click="updateSelection($event,answer.id)">-->
+<!--                        {{$index+1}}、{{ answer.choice }}-->
+<!--                    </div>-->
+                    <li class="list-group-item">
+                        <input type="button" id="submit_{{$index}}" ng-click="my_confirm(_question.id,'.'+_question.panel,$index)" value="提交">
+                    </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="test"></div>
+
+<!--    <table id="example" class="display" width="100%"></table>-->
+
+
+
+    <div class="skip" hidden>skip</div>
+    <script src="../public/js/jquery-3.5.1.min.js"></script>
+    <script src="../public/js/echarts.min.js"></script>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+    <script src="angular_question.js"></script>
+
+</div>
+
+
+
+</body>
+
+<script>
+
+
+
+</script>
+
+
+</html>
