@@ -65,8 +65,6 @@ angular.module('ngBlockchain', [])
                 }
                 // console.log("测试=>",$('#login_value').serialize());
 
-                // console.log($("#setTime").val());
-                // console.log($("#setTitle").val());
                 console.log($("#setAnswer1").val());
                 console.log($("#setAnswer2").val());
                 console.log($("#setAnswer3").val());
@@ -93,14 +91,18 @@ angular.module('ngBlockchain', [])
                                 (res) => {
                                     console.log("POST 问题数据=>",res.data);
                                     console.log("POST 问题数据 data.msg=>",res.data.data.insertId);
-                                    let _q_id = res.data.data.insertId;
-                                    let correctness = 0;
+
+
                                     for(i=1;i<5;i++){
                                         let _context = $("#setAnswer" + i).val();
                                         console.log("_context=>"+_context);
 
+                                        let _q_id = res.data.data.insertId;
+                                        let correctness = 0;
                                         if(i==correct){
                                             correctness = 1;
+                                        } else{
+                                            correctness = 0;
                                         }
 
                                         var promise = $http.post('http://127.0.0.1:3002/api/u/tab_question/add/' +
