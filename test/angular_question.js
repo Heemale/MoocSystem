@@ -111,15 +111,15 @@ angular.module('ngBlockchain', [])
                                             'context=' + _context + '&' +
                                             'correctness=' + correctness, {params: {}}).then(
                                             (res) => {
-                                                console.log("POST 问题数据=>",res.data);
+                                                console.log("POST 答案数据=>",res.data);
+
                                             },
                                             (err) => {
                                                 console.log('err');
                                             }
                                         );
-
                                     }
-
+                                    alert("添加完成");
                                 },
                                 (err) => {
                                     console.log('err');
