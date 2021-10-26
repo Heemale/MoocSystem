@@ -194,19 +194,21 @@ app.all('/api/tab_record_answer/answer/counts/search/q_id=:_q_id', function (req
  * POST 答题数据
  * POST /api/u/tab_record_answer/add/v_id=1&u_id=1&q_id=1&a_id=1
  **/
-app.all('/api/u/tab_record_answer/add/v_id=:_v_id&u_id=:_u_id&q_id=:_q_id&a_id=:_a_id', function (req, res) {
+app.all('/api/u/tab_record_answer/add/v_id=:_v_id&u_id=:_u_id&q_id=:_q_id&a_id=:_a_id&correctness=:_correctness', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
 
     var _v_id = req.params._v_id;
     var _u_id = req.params._u_id;
     var _q_id = req.params._q_id;
     var _a_id = req.params._a_id;
+    var _correctness = req.params._correctness;
 
     console.log("POST 答题数据" +
         "，_v_id=>"+_v_id +
         "，_u_id=>" + _u_id +
         "，_q_id=>" + _q_id +
-        "，_a_id=>" + _a_id);
+        "，_a_id=>" + _a_id +
+        "，_correctness=>" + _correctness);
 
     let date = new Date();
     let nowadays = dateFormat("YYYY-mm-dd HH:MM:SS", date);
@@ -215,7 +217,7 @@ app.all('/api/u/tab_record_answer/add/v_id=:_v_id&u_id=:_u_id&q_id=:_q_id&a_id=:
     var query = connection.query('insert into `tab_record_answer` \n' +
         '(v_id,u_id,q_id,a_id,timestamp)\n' +
         'values\n' +
-        '(?,?,?,?,?);', [_v_id,_u_id,_q_id,_a_id,nowadays], function (error, results, fields) {
+        '(?,?,?,?,?,?);', [_v_id,_u_id,_q_id,_a_id,nowadays,_correctness], function (error, results, fields) {
         if (error) throw error;
         else {
             res.jsonp({
