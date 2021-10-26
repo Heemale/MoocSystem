@@ -165,6 +165,10 @@ app.get("/statisticalData",(req,res,next)=>{
     res.render("statisticalData")
 });
 
+app.get("/dataTables",(req,res,next)=>{
+    res.render("dataTables")
+});
+
 
 
 

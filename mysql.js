@@ -20,57 +20,6 @@ connection.connect(function(err) {
     console.log('连接成功，id是 ' + connection.threadId);
 });
 
-//测试
-app.all('/data', function (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-
-    var query = connection.query('(select * from\n' +
-        ' tab_question t1 \n' +
-        ' \tleft join tab_answer t2\n' +
-        ' \ton `t1`.id=`t2`.q_id\n' +
-        '    where t1.id in (\n' +
-        '    \tselect t.id from(\n' +
-        '        \t select * from `tab_question` where TIME=5 order by RAND() limit 1\n' +
-        '        ) t\n' +
-        '    ) order by RAND())\n' +
-        ' UNION\n' +
-        '   (select * from\n' +
-        ' tab_question t1 \n' +
-        ' \tleft join tab_answer t2\n' +
-        ' \ton `t1`.id=`t2`.q_id\n' +
-        '    where t1.id in (\n' +
-        '    \tselect t.id from(\n' +
-        '        \t select * from `tab_question` where TIME=10 order by RAND() limit 1\n' +
-        '        ) t\n' +
-        '    ) order by RAND());', [], function (error, results, fields) {
-        if (error) throw error;
-        else {
-            res.jsonp(results);
-        }
-    });
-
-});
-
-
-/**
- * 登陆接口
- * POST 登陆接口 /api/user/login?username=:_user&pwd=:_pwd
- * */
-app.all('/api/user/login', function (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-
-    // var _user = req.params._user;
-    // var _pwd = req.params._pwd;
-    //
-    //         "，_user=>" + _user +
-    //         "，_pwd=>" + _pwd
-
-    console.log("POST 登陆接口 /api/user/login");
-    data = [{"counts":9}];
-    res.jsonp(data);
-
-});
-
 /**
  * GET [v_id=1] 时间点列表
  * GET /api/tab_question/video/timepoints/search/v_id=1
@@ -340,8 +289,6 @@ app.all('/api/tab_question/video/timepoints/nearby/search/v_id=2&time=:_time', f
 
 });
 
-
-
 /**
  * POST 添加观看记录
  * POST /api/u/tab_record_video/add/v_id=1&u_id=1&progress=15&finished=0
@@ -459,7 +406,43 @@ app.all('/api/tab_answer/search/q_id=:_q_id', function (req, res) {
 });
 
 /**
- * 时间戳转化工具
+ * GET 统计答题正确率
+ * GET /api/tab_record_answer/correct/rate/search
+ **/
+app.all('/api/tab_record_answer/correct/rate/search', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    console.log("GET " +
+        " 统计答题正确率");
+
+    var query = connection.query('select\n' +
+        '\tq_id, \n' +
+        '\tcount(1) totalCount,\n' +
+        '\tsum(case when correctness = 1 then 1 else 0 end) rightCount,\n' +
+        '\tsum(case when correctness != 1 then 1 else 0 end) mistakeCount \n' +
+        '\tfrom \n' +
+        '    \n' +
+        '(SELECT \n' +
+        ' \tt1.* \n' +
+        ' FROM \n' +
+        ' tab_record_answer t1\n' +
+        ' \tLEFT JOIN tab_record_answer t2\n' +
+        '    ON t1.u_id = t2.u_id\n' +
+        '    and t1.q_id =t2.q_id\n' +
+        '    AND t1.timestamp < t2.timestamp\n' +
+        ' WHERE t2.id IS NULL) t3\n' +
+        ' \n' +
+        'group by q_id;', [], function (error, results, fields) {
+        if (error) throw error;
+        else {
+            res.jsonp(results);
+        }
+    });
+
+});
+
+/**
+ * 时间转化工具
  * 转化结果 2021-10-23 12:58:11
  * */
 function dateFormat(fmt, date) {
