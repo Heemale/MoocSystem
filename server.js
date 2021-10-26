@@ -161,7 +161,9 @@ app.get("/videos/:num",(req,res,next)=>{
 });
 
 
-
+app.get("/statisticalData",(req,res,next)=>{
+    res.render("statisticalData")
+});
 
 
 
