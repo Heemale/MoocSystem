@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>首页</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/js/layui/css/layui.css">
+</head>
+
+<body>
+
+<div>
+    <h1>首页</h1>
+    <h3>你好，<%= msg.txt %></h3>
+</div>
+<ul class="layui-nav layui-nav-tree" lay-filter="test">
+    <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+    <li class="layui-nav-item">
+        <a href="javascript:;">古诗词</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">古诗词形象题</a></dd>
+            <dd><a href="javascript:;">古寺词感情题</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">作文</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">议论文</a></dd>
+            <dd><a href="javascript:;">记叙文</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">文言文</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;">实词</a></dd>
+            <dd><a href="javascript:;">虚词</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">项目启动</a>
+        <dl class="layui-nav-child">
+            <dd><a href="/videos/1">视频1</a></dd>
+            <dd><a href="javascript:;">视频2</a></dd>
+        </dl>
+    </li>
+</ul>
+
+</body>
+
+
+<script src="/js/layui/layui.js"></script>
+</html>
+

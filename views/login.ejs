@@ -1,0 +1,47 @@
+
+
+
+<head>
+    <meta charset="utf-8">
+    <title>登陆</title>
+</head>
+
+<body>
+<header>
+    <h1>登陆你的账号</h1>
+</header>
+<div>
+    <br/>
+    <form method="post" action="/login">
+    <div>
+        <h5>请输入学号：</h5>
+        <div>
+            <input name="name" type="text">
+        </div>
+        <h5>请输入密码：</h5>
+        <div>
+            <input name="psw" type="password">
+        </div>
+
+        <button type="submit">登陆</button>
+    </div>
+    </form>
+    <%
+    if (msg.code!='000'){
+    %>
+        <span>
+      <%= msg.code %> <%= msg.txt %>
+    </span>
+    <%}%>
+
+
+    </div>
+
+</div>
+<script src="/js/jquery-3.5.1.min.js"></script>
+<script>
+
+
+
+</script>
+</body>
