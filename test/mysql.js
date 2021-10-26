@@ -215,7 +215,7 @@ app.all('/api/u/tab_record_answer/add/v_id=:_v_id&u_id=:_u_id&q_id=:_q_id&a_id=:
     console.log(" 当前时间=>",nowadays);
 
     var query = connection.query('insert into `tab_record_answer` \n' +
-        '(v_id,u_id,q_id,a_id,timestamp)\n' +
+        '(v_id,u_id,q_id,a_id,timestamp,correctness)\n' +
         'values\n' +
         '(?,?,?,?,?,?);', [_v_id,_u_id,_q_id,_a_id,nowadays,_correctness], function (error, results, fields) {
         if (error) throw error;

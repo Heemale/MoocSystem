@@ -151,32 +151,55 @@ angular.module('ngBlockchain', [])
 
             $scope.my_confirm = function (_qid,_name,_submitId) {
                 var json = getjson(_qid);
-                var msg = "您真的答案是：" + json + " 是否确认提交";
-                if (confirm(msg) == true) {
-                    console.log("您的答案是：",json);
-                } else {
-                    return false;
-                }
+                let _aid = json[0];
 
                 /**
-                 * POST 答题数据
-                 * POST /api/u/tab_record_answer/add/v_id=1&u_id=1&q_id=1&a_id=1
+                 * GET [选项] 的正确性
+                 * GET /api/tab_answer/answer/correctness/search/a_id=1
                  **/
-                var promise = $http.post('http://127.0.0.1:3002/api/u/tab_record_answer/add/v_id=1&u_id=1&q_id='+ _qid  +'&a_id=' + json[0] , {params: {}}).then(
-                    (res) => {
-                        console.log("POST 答题数据=>",res.data);
-                        console.log("POST 答题数据 data.msg=>",res.data.msg);
+                var promise = $http.get('http://127.0.0.1:3002/api/tab_answer/answer/correctness/search/a_id=' + _aid , {params: {}})
+                    .then(
+                        (res) => {
+                            console.log("GET [选项] 的正确性=>",res.data);
+                            console.log("GET [选项] 的正确性=>",res.data[0].correctness);
+                            let _correctness = res.data[0].correctness;
+                            if(_correctness == 1){
+                                alert("回答正确")
+                            } else{
+                                alert("回答错误")
+                            }
+                            /**
+                             * POST 答题数据
+                             * POST /api/u/tab_record_answer/add/v_id=1&u_id=1&q_id=1&a_id=1
+                             **/
+                            var promise = $http.post('http://127.0.0.1:3002/api/u/tab_record_answer/add/v_id=1&u_id=1&' +
+                                'q_id='+ _qid  +'&' +
+                                'a_id=' + _aid +'&' +
+                                'correctness=' + _correctness
+                                , {params: {}})
+                                .then(
+                                    (res) => {
+                                        console.log("POST 答题数据=>",res.data);
+                                        console.log("POST 答题数据 data.msg=>",res.data.msg);
 
-                        if (res.data.msg == "success"){
-                            console.log("_submitId=>",_submitId);
-                            $scope.questions[_submitId].submitflag = true;
-                            $(_name).hide();
+                                        if (res.data.msg == "success"){
+                                            console.log("_submitId=>",_submitId);
+                                            $scope.questions[_submitId].submitflag = true;
+                                            $(_name).hide();
+                                        }
+                                    },
+                                    (err) => {
+                                        console.log('err');
+                                    }
+                                );
+
+                        },
+                        (err) => {
+                            console.log('err');
                         }
-                    },
-                    (err) => {
-                        console.log('err');
-                    }
-                );
+                    );
+
+
 
             };
 
