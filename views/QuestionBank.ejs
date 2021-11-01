@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据表</title>
+    <link type="text/css" rel="styleSheet"  href="/DataTables/datatables.css" />
+    <style>
+        div.container {
+            text-align: center;
+            margin: 0 auto;
+            width: 50%;
+        }
+        td.details-control {
+            background: url('/img/caret-right.svg') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            background: url('/img/caret-down.svg') no-repeat center center;
+        }
+    </style>
+</head>
+
+
+<body ng-app="ngBlockchain" ng-controller="zbycontroller">
+<div class="container">
+
+    <div>
+        <table id="myTable" class="display" style="width:100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>id</th>
+                <th>title</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <th></th>
+                <th>id</th>
+                <th>title</th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <script src="/js/jquery-3.5.1.min.js"></script>
+    <script src="/DataTables/datatables.js"></script>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+    <script src="/myJs/QuestionBank.js"></script>
+
+</div>
+
+</body>
+<script></script>
+</html>

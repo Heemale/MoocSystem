@@ -20,7 +20,10 @@ connection.connect(function(err) {
     console.log('连接成功，id是 ' + connection.threadId);
 });
 
+/*  1.答题系统  */
+/* 1.1弹出问题 */
 /**
+ * 1.
  * GET [v_id=1] 时间点列表
  * GET /api/tab_question/video/timepoints/search/v_id=1
  * */
@@ -41,7 +44,8 @@ app.all('/api/tab_question/video/timepoints/search/v_id=:_v_id', function (req, 
 });
 
 /**
- * GET [v_id=1] [time=5] 随机1个问题随机答案
+ * 2.
+ * GET [v_id=1] [time=5] 指定时间点，随机得到1个问题，选项随机排序
  * GET /api/tab_question/question/random/search/v_id=1&time=5
  * */
 app.all('/api/tab_question/question/random/search/v_id=:_v_id&time=:_time', function (req, res) {
@@ -71,6 +75,7 @@ app.all('/api/tab_question/question/random/search/v_id=:_v_id&time=:_time', func
 });
 
 /**
+ * 3.
  * GET [选项] 的正确性
  * GET /api/tab_answer/answer/correctness/search/a_id=1
  **/
@@ -88,6 +93,57 @@ app.all('/api/tab_answer/answer/correctness/search/a_id=:_a_id', function (req, 
     });
 
 });
+
+/* 1.2记录作答 */
+/**
+ * 4.
+ * POST 答题数据
+ * POST /api/u/tab_record_answer/add/v_id=1&u_id=1&q_id=1&a_id=1&correctness=0
+ **/
+app.all('/api/u/tab_record_answer/add/v_id=:_v_id&u_id=:_u_id&q_id=:_q_id&a_id=:_a_id&correctness=:_correctness', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    var _v_id = req.params._v_id;
+    var _u_id = req.params._u_id;
+    var _q_id = req.params._q_id;
+    var _a_id = req.params._a_id;
+    var _correctness = req.params._correctness;
+
+    console.log("POST 答题数据" +
+        "，_v_id=>"+_v_id +
+        "，_u_id=>" + _u_id +
+        "，_q_id=>" + _q_id +
+        "，_a_id=>" + _a_id +
+        "，_correctness=>" + _correctness);
+
+    let date = new Date();
+    let nowadays = dateFormat("YYYY-mm-dd HH:MM:SS", date);
+    console.log(" 当前时间=>",nowadays);
+
+    var query = connection.query('insert into `tab_record_answer` \n' +
+        '(v_id,u_id,q_id,a_id,timestamp,correctness)\n' +
+        'values\n' +
+        '(?,?,?,?,?,?);', [_v_id,_u_id,_q_id,_a_id,nowadays,_correctness], function (error, results, fields) {
+        if (error) throw error;
+        else {
+            res.jsonp({
+
+                "state":"200",
+
+                "msg":"success",
+
+                "data": {
+                    affectedRows:results.affectedRows,
+                    insertId:results.insertId
+                }
+
+            });
+        }
+    });
+
+});
+
+
 
 /**
  * GET [v_id=1] 问题列表
@@ -139,75 +195,32 @@ app.all('/api/tab_record_answer/answer/counts/search/q_id=:_q_id', function (req
 
 });
 
-/**
- * POST 答题数据
- * POST /api/u/tab_record_answer/add/v_id=1&u_id=1&q_id=1&a_id=1
- **/
-app.all('/api/u/tab_record_answer/add/v_id=:_v_id&u_id=:_u_id&q_id=:_q_id&a_id=:_a_id&correctness=:_correctness', function (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
 
-    var _v_id = req.params._v_id;
-    var _u_id = req.params._u_id;
-    var _q_id = req.params._q_id;
-    var _a_id = req.params._a_id;
-    var _correctness = req.params._correctness;
-
-    console.log("POST 答题数据" +
-        "，_v_id=>"+_v_id +
-        "，_u_id=>" + _u_id +
-        "，_q_id=>" + _q_id +
-        "，_a_id=>" + _a_id +
-        "，_correctness=>" + _correctness);
-
-    let date = new Date();
-    let nowadays = dateFormat("YYYY-mm-dd HH:MM:SS", date);
-    console.log(" 当前时间=>",nowadays);
-
-    var query = connection.query('insert into `tab_record_answer` \n' +
-        '(v_id,u_id,q_id,a_id,timestamp,correctness)\n' +
-        'values\n' +
-        '(?,?,?,?,?,?);', [_v_id,_u_id,_q_id,_a_id,nowadays,_correctness], function (error, results, fields) {
-        if (error) throw error;
-        else {
-            res.jsonp({
-
-                "status":"200",
-
-                "msg":"success",
-
-                "data": {
-                    affectedRows:results.affectedRows,
-                    insertId:results.insertId
-                }
-
-            });
-        }
-    });
-
-});
 
 /**
  * POST 问题数据
  * POST /api/u/tab_question/add/v_id=2&title=问题&time=5
  **/
-app.all('/api/u/tab_question/add/v_id=2&title=:_title&time=:_time', function (req, res) {
+app.all('/api/u/tab_question/add/v_id=:_v_id&title=:_title&time=:_time', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
 
+    var _v_id = req.params._v_id;
     var _title = req.params._title;
     var _time = req.params._time;
 
     console.log("POST " +
+        "[_v_id=" +  _v_id + "]" +
         "[_title=" +  _title + "]" +
         "[_time=" +  _time + "]" +
         " 问题数据");
 
     var query = connection.query('insert into `tab_question` (v_id,title,time)\n' +
-        '\tVALUE(2,?,?);', [_title,_time], function (error, results, fields) {
+        '\tVALUE(?,?,?);', [_v_id,_title,_time], function (error, results, fields) {
         if (error) throw error;
         else {
             res.jsonp({
 
-                "status":"200",
+                "state":"200",
 
                 "msg":"success",
 
@@ -226,26 +239,28 @@ app.all('/api/u/tab_question/add/v_id=2&title=:_title&time=:_time', function (re
  * POST 答案数据
  * POST /api/u/tab_question/add/v_id=2&q_id=5&context=答案一&correctness=0
  **/
-app.all('/api/u/tab_question/add/v_id=2&q_id=:_q_id&context=:_context&correctness=:_correctness', function (req, res) {
+app.all('/api/u/tab_question/add/v_id=:_v_id&q_id=:_q_id&context=:_context&correctness=:_correctness', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
 
+    var _v_id = req.params._v_id;
     var _q_id = req.params._q_id;
     var _context = req.params._context;
     var _correctness = req.params._correctness;
 
     console.log("POST " +
+        "[_v_id=" +  _v_id + "]" +
         "[_q_id=" +  _q_id + "]" +
         "[_context=" +  _context + "]" +
         "[_correctness=" +  _correctness + "]" +
         " 答案数据");
 
     var query = connection.query('insert into tab_answer (v_id,q_id,context,correctness)\n' +
-        '\tVALUE(2,?,?,?);', [_q_id,_context,_correctness], function (error, results, fields) {
+        '\tVALUE(?,?,?,?);', [_v_id,_q_id,_context,_correctness], function (error, results, fields) {
         if (error) throw error;
         else {
             res.jsonp({
 
-                "status":"200",
+                "state":"200",
 
                 "msg":"success",
 
@@ -314,7 +329,7 @@ app.all('/api/u/tab_record_video/add/v_id=1&u_id=1&progress=:_progress&finished=
         else {
             res.jsonp({
 
-                "status":"200",
+                "state":"200",
 
                 "msg":"success",
 
@@ -440,6 +455,52 @@ app.all('/api/tab_record_answer/correct/rate/search', function (req, res) {
     });
 
 });
+
+
+/**
+ * 题库系统
+ * */
+/**
+ * GET 题库展示题目
+ * GET /api/tab_question/question/bank/search
+ **/
+app.all('/api/tab_question/question/bank/search', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    console.log("GET " +
+        " 所有题目");
+
+    var query = connection.query('select id,title from tab_question;', [], function (error, results, fields) {
+        if (error) throw error;
+        else {
+            results = {'data':results};
+            res.json(results);
+        }
+    });
+
+});
+
+/**
+ * GET 题库展示答案
+ * GET /api/tab_answer/question/bank/search/q_id=1
+ **/
+app.all('/api/tab_answer/question/bank/search/q_id=:_q_id', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    var _q_id = req.params._q_id;
+
+    console.log("GET " +
+        "[_q_id=" +  _q_id + "]" +
+        " 展示答案");
+
+    var query = connection.query('select context,correctness from tab_answer where q_id=?;', [_q_id], function (error, results, fields) {
+        if (error) throw error;
+        else {
+            res.json(results);
+        }
+    });
+
+});
+
 
 /**
  * 时间转化工具

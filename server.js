@@ -169,8 +169,17 @@ app.get("/dataTables",(req,res,next)=>{
     res.render("dataTables")
 });
 
+app.get("/danmu",(req,res,next)=>{
+    res.render("danmu")
+});
 
+app.get("/QuestionBank",(req,res,next)=>{
+    res.render("QuestionBank")
+});
 
+app.get("/QuestionBankBatchImport",(req,res,next)=>{
+    res.render("QuestionBankBatchImport")
+});
 
 
 

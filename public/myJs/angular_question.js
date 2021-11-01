@@ -42,9 +42,9 @@ angular.module('ngBlockchain', [])
                  * POST 添加观看记录
                  * POST /api/u/tab_record_video/add/v_id=1&u_id=1&progress=15&finished=0
                  **/
-                var promise = $http.get('http://127.0.0.1:3002/api/u/tab_record_video/add/v_id=1&u_id=1&progress='+ _progress +'&finished=' + _finished, {params: {}}).then(
+                var promise = $http.post('http://127.0.0.1:3002/api/u/tab_record_video/add/v_id=1&u_id=1&progress='+ _progress +'&finished=' + _finished, {params: {}}).then(
                     (res) => {
-                        console.log("GET [v_id=2] [time=20] 附近10s的时间点=>",res.data);
+                        console.log("POST 添加观看记录=>",res.data);
                     },
                     (err) => {
                         console.log('err');

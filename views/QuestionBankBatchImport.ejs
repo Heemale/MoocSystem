@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>上传文件</title>
+    <script type="text/javascript" src='/js/xlsx.full.min.js'></script>
+</head>
+
+<body>
+<h3>批量导入题库</h3>
+文件：<br>
+<input type="file" id="file"><br>
+</body>
+<script src="/js/jquery-3.5.1.min.js"></script>
+<script>
+
+    document.querySelector("#file").addEventListener("change", function () {
+        //获取到选中的文件
+        var file = document.querySelector("#file").files[0];
+        var type = file.name.split('.');
+        if (type[type.length - 1] !== 'xlsx' && type[type.length - 1] !== 'xls') {
+            alert('只能选择excel文件导入');
+            return false;
+        }
+        const reader = new FileReader();
+        reader.readAsBinaryString(file);
+        reader.onload = (e) => {
+            const data = e.target.result;
+            const zzexcel = window.XLS.read(data, {
+                type: 'binary'
+            });
+            const result = [];
+            for (let i = 0; i < zzexcel.SheetNames.length; i++) {
+                const newData = window.XLS.utils.sheet_to_json(zzexcel.Sheets[zzexcel.SheetNames[i]]);
+                result.push(...newData)
+                //console.log('newData', newData[i])
+            }
+            //console.log('result', result)
+            // result.forEach(function (item) {
+            // console.log(item)
+            // })
+            var postdata = {
+                "jsonrpc": "2.0",
+                "method": "eth_coinbase",
+                "params": [],
+                "id": 64
+            };
+            result.forEach(function (item) {
+                var _title = item.title
+                var _time = item.time
+                var _v_id = item.v_id
+
+                $.ajax({
+                    type: "post",
+                    url: 'http://127.0.0.1:3002/api/u/tab_question/add/v_id='+ _v_id +'&title=' + _title +'&time=' + _time,
+                    contentType: "application/json",
+                    dataType: "jsonp",
+                    data: JSON.stringify(postdata),
+                    success: function (data) {
+                        console.log('finished data', data);
+                        console.log('finished data', data.data.insertId);
+                        var _v_id = item.v_id
+                        var _q_id = data.data.insertId
+                        var a = new Array()
+                        a.push({
+                                context: item.answer1,
+                                correctness: item.right1
+                            }, {
+                                context: item.answer2,
+                                correctness: item.right2
+                            }, {
+                                context: item.answer3,
+                                correctness: item.right3
+                            }, {
+                                context: item.answer4,
+                                correctness: item.right4
+                            }
+                        )
+                        //console.log(a)
+                        a.forEach(function (item) {
+                            $.ajax({
+                                type: "post",
+                                url:'http://127.0.0.1:3002/api/u/tab_question/add/v_id='+ _v_id +'&q_id='+ _q_id +'&context='+ item.context +'&correctness='+ item.correctness,
+                                contentType: "application/json",
+                                dataType: "jsonp",
+                                data: JSON.stringify(postdata),
+                                success: function (data) {
+                                    console.log('finished data', data);
+                                }
+                            });
+                        })
+                    }
+                });
+
+            })
+            // alert("导入成功")
+
+        }
+    })
+
+
+</script>
+
+</html>
